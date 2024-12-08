@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistiques & Visualisations</title>
+    <!-- Lien vers Bootstrap (CDN) -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Visualisations avec vos données</h1>
+
+        <!-- Formulaire pour choisir le type de visualisation -->
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="vis_choice">Choisir une visualisation :</label>
+                <select name="vis_choice" id="vis_choice" class="form-control">
+                    {% for choice in choices %}
+                        <option value="{{ choice }}">{{ choice }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="x_axis">Sélectionner la colonne pour l'axe X :</label>
+                <select name="x_axis" id="x_axis" class="form-control">
+                    {% for col in columns %}
+                        <option value="{{ col }}">{{ col }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="y_axis">Sélectionner la colonne pour l'axe Y (si applicable) :</label>
+                <select name="y_axis" id="y_axis" class="form-control">
+                    {% for col in columns %}
+                        <option value="{{ col }}">{{ col }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-success">Voir la visualisation</button>
+        </form>
+
+        <hr>
+
+        <!-- Afficher les visualisations dynamiques ou erreurs -->
+        {% if vis_image %}
+            <div class="text-center">
+                <h3>{{ vis_type }}</h3>
+                <img src="data:image/png;base64,{{ vis_image }}" alt="{{ vis_type }}" class="img-fluid mt-3">
+            </div>
+        {% elif vis_html %}
+            <div class="text-center">
+                <h3>{{ vis_type }}</h3>
+                {{ vis_html|safe }}
+            </div>
+        {% elif error %}
+            <div class="alert alert-danger">
+                {{ error }}
+            </div>
+        {% endif %}
+
+        <br>
+        <a href="/stats" class="btn btn-secondary">Retour</a>
+    </div>
+
+    <!-- Scripts Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
